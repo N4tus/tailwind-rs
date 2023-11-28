@@ -10,10 +10,12 @@ use std::{
     str::FromStr,
 };
 use tailwind_ast::{parse_fraction, ASTVariant, AstStyle};
+use crate::systems::media::Media;
 
 /// `v:v:-a-a-[A]`
 #[derive(Debug, Clone)]
 pub struct TailwindInstruction {
+    media: Option<Media>,
     negative: Negative,
     variants: Vec<TailwindVariant>,
     elements: TailwindElements,

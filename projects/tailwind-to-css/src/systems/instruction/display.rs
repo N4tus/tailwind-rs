@@ -1,15 +1,23 @@
+use std::fmt::write;
 use super::*;
 
 impl Display for TailwindInstruction {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        if let Some(media) = self.media {
+            write!(f, "@media(min-width:{}px){{", media.px())?;
+        }
         for v in &self.variants {
             write!(f, "{}", v)?
         }
         self.negative.write(f)?;
         match self.arbitrary.is_some() {
-            true => write!(f, "{}-{}", self.elements, self.arbitrary.get_class()),
-            false => write!(f, "{}", self.elements),
+            true => write!(f, "{}-{}", self.elements, self.arbitrary.get_class())?,
+            false => write!(f, "{}", self.elements)?,
         }
+        if self.media.is_some() {
+            write!(f, "}}")?;
+        }
+        Ok(())
     }
 }
 

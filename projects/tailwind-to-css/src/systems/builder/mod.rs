@@ -174,7 +174,7 @@ fn try_trace(tw: &mut TailwindBuilder, style: &str, obfuscate: bool) -> Result<C
     let parsed = parse_tailwind(style)?;
     let mut out = CssBundle::default();
     for item in parsed {
-        let i = CssInstance::new(&*item.get_instance()?, tw, obfuscate);
+        let i = CssInstance::new(&*item.get_instance()?, tw, item.media(), obfuscate);
         out.add_trace(&i);
         tw.objects.insert(i);
     }
@@ -185,7 +185,7 @@ fn try_inline(tw: &mut TailwindBuilder, style: &str, mode: CssInlineMode) -> Res
     let parsed = parse_tailwind(style)?;
     let mut out = CssBundle::default();
     for item in parsed {
-        let i = CssInstance::new(&*item.get_instance()?, tw, true);
+        let i = CssInstance::new(&*item.get_instance()?, tw, item.media(), true);
         match &i.inlineable {
             true => out.add_inline(i),
             false => {

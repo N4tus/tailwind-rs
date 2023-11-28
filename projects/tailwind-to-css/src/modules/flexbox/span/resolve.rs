@@ -36,7 +36,7 @@ impl Display for GridSize {
 
 impl GridSize {
     pub fn parse(pattern: &str, allow_full: bool) -> Result<Self> {
-        debug_assert!(allow_full, "can't set to full");
+        debug_assert!(allow_full || pattern != "full", "can't set to full");
         let size = match pattern {
             "auto" => Self::Auto,
             "full" => Self::Full,

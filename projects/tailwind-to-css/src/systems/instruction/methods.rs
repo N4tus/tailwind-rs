@@ -3,8 +3,9 @@ use super::*;
 impl<'a> From<AstStyle<'a>> for TailwindInstruction {
     fn from(node: AstStyle<'a>) -> Self {
         Self {
+            media: node.variants.iter().filter_map(|s| s.try_into().ok()).next(),
             negative: Negative::from(node.negative),
-            variants: node.variants.into_iter().map(|s| s.into()).collect(),
+            variants: node.variants.into_iter().filter_map(|s| Media::try_from(s).err()).map(|s| s.into()).collect(),
             elements: TailwindElements { inner: node.elements.into_iter().map(|s| s.to_string()).collect() },
             arbitrary: TailwindArbitrary::from(node.arbitrary.unwrap_or_default()),
         }
@@ -29,5 +30,9 @@ impl TailwindInstruction {
     // TODO
     pub fn normalization(self) -> Self {
         self
+    }
+
+    pub fn media(&self) -> Option<Media> {
+        self.media
     }
 }

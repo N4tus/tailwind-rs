@@ -1,5 +1,6 @@
 use super::*;
 use crate::Base62;
+use crate::systems::media::Media;
 
 mod traits;
 
@@ -11,17 +12,19 @@ pub(crate) struct CssInstance {
     pub selector: String,
     pub attribute: CssAttributes,
     pub addition: String,
+    pub media: Option<Media>,
 }
 
 // noinspection DuplicatedCode
 impl CssInstance {
-    pub fn new(item: &dyn TailwindInstance, ctx: &TailwindBuilder, obfuscate: bool) -> Self {
+    pub fn new(item: &dyn TailwindInstance, ctx: &TailwindBuilder, media: Option<Media>, obfuscate: bool) -> Self {
         Self {
             obfuscate,
             inlineable: item.inlineable(),
             selector: item.id(),
             attribute: item.attributes(ctx),
             addition: item.additional(ctx),
+            media
         }
     }
 
@@ -29,6 +32,7 @@ impl CssInstance {
         let mut hasher = Xxh3::new();
         css.attribute.hash(&mut hasher);
         css.addition.hash(&mut hasher);
+        css.media.hash(&mut hasher);
         hasher.finish().base62()
     }
     pub fn get_class(&self) -> String {
@@ -39,12 +43,18 @@ impl CssInstance {
     }
     /// write css to buffers
     pub fn write_css(&self, f: &mut (dyn Write)) -> Result<()> {
+        if let Some(media) = self.media {
+            write!(f, "@media(min-width:{}px){{", media.px())?;
+        }
         f.write_char('.')?;
         normalize_class_name(f, &self.get_class())?;
         f.write_char('{')?;
         write!(f, "{}", self.attribute)?;
         f.write_char('}')?;
         write!(f, "{}", self.addition)?;
+        if self.media.is_some() {
+            f.write_char('}')?;
+        }
         Ok(())
     }
 }
