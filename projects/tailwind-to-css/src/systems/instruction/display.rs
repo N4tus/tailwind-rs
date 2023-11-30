@@ -1,8 +1,8 @@
-use std::fmt::write;
 use super::*;
 
 impl Display for TailwindInstruction {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        //TODO: This is wrong
         if let Some(media) = self.media {
             write!(f, "@media(min-width:{}px){{", media.px())?;
         }

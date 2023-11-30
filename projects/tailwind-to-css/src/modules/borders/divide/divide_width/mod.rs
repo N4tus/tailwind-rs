@@ -16,15 +16,22 @@ impl Display for TailwindDivideWidth {
 }
 
 impl TailwindInstance for TailwindDivideWidth {
+    fn inlineable(&self) -> bool {
+        false
+    }
+    fn selectors(&self, _: &TailwindBuilder) -> String {
+        // format!(".divide-{} > * + *", self.kind)
+        ">:not([hidden])~:not([hidden])".to_string()
+    }
     fn attributes(&self, _: &TailwindBuilder) -> CssAttributes {
         match self.axis {
             AxisXY::X => css_attributes! {
-                "border-right-width" => format!("{}px", self.kind),
-                "border-left-width" => "0"
+                "border-left-width" => format!("{}px", self.kind),
+                "border-right-width" => "0",
             },
             AxisXY::Y => css_attributes! {
-                "border-top-width" => "0",
-                "border-bottom-width" => format!("{}px", self.kind)
+                "border-top-width" => format!("{}px", self.kind),
+                "border-bottom-width" => "0",
             },
             AxisXY::N => unreachable!(),
         }

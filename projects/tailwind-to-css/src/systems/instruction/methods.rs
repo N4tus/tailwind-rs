@@ -35,4 +35,8 @@ impl TailwindInstruction {
     pub fn media(&self) -> Option<Media> {
         self.media
     }
+
+    pub fn variants(&self) -> Vec<TailwindVariant> {
+        self.variants.clone()
+    }
 }

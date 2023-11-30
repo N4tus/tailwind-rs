@@ -4,7 +4,7 @@ impl Eq for CssInstance {}
 
 impl PartialEq<Self> for CssInstance {
     fn eq(&self, other: &Self) -> bool {
-        self.selector.eq(&other.selector) && self.media.eq(&other.media)
+        self.id.eq(&other.id) && self.media.eq(&other.media)
     }
 }
 
@@ -12,7 +12,7 @@ impl PartialOrd<Self> for CssInstance {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         match self.media.partial_cmp(&other.media) {
             None | Some(Ordering::Equal) => {
-                self.selector.partial_cmp(&other.selector)
+                self.id.partial_cmp(&other.id)
             }
             ordering => ordering
         }
@@ -22,7 +22,7 @@ impl PartialOrd<Self> for CssInstance {
 impl Ord for CssInstance {
     fn cmp(&self, other: &Self) -> Ordering {
         match self.media.cmp(&other.media) {
-            Ordering::Equal => self.selector.cmp(&other.selector),
+            Ordering::Equal => self.id.cmp(&other.id),
             ordering => ordering
         }
     }

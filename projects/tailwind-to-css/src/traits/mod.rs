@@ -29,7 +29,7 @@ pub trait TailwindInstance: Display {
     }
     /// Custom selector name
     fn selectors(&self, ctx: &TailwindBuilder) -> String {
-        format!(".{}", self.id())
+        String::new()
     }
     /// Attributes in css
     fn attributes(&self, ctx: &TailwindBuilder) -> CssAttributes;
